@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>SuperCinema</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles/main.css">
+        {{!-- <script src = "scripts.js" defer></script>  <!--defer tag allows this part to not be run until entire document has been parsed--> --}}
+    </head>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">SuperCinema DBMS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./addmovies">Add Movie</a>
+                </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./customers">Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./addcustomers">Add Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./showings">Showings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./addshowings">Add Showing</a>
+            </li>                     
+            <li class="nav-item">
+                <a class="nav-link" href="./ticket_purchases">Ticket Purchases</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./test">Test</a>
+            </li>
+            </ul>
+            <span class="navbar-text">
+            <!-- insert text here if desired-->
+            </span>
+        </div>
+    </nav>
+{{#each foo}}
+{{this}}
+{{/each}}
+<h3>Add new people:</h3>
+<form id="addperson" action="/people" method="post">
+    First name: <input type="text" name="fname"><br>
+    Last name: <input type="text" name="lname"><br>
+    Homeworld: <select name="homeworld"> 
+        {{#each planets}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select><br>
+    Age: <input type="number" name="age"><br>
+    <input type="submit" value="Submit">
+ </form>
+<br/>
+
+<form id='filter_people' action='' method=''>
+<!--- this form does not submit directly, the button handles all the interaction with backend -->
+    <label> Filter by homeworld </label>
+    <select id='homeworld_filter' name="homeworld"> 
+        {{#each planets}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select><br>
+    <input type="button" value="Filter" onclick="filterPeopleByHomeworld()">
+</form>
+
+<form id='search_people' action='' method=''>
+<!--- this form does not submit directly, the button handles all the interaction with backend -->
+    <label> Search people for first name starting with:</label>
+    <input id='first_name_search_string' type='text' name='first_name_search_string' value=''>
+    <input type="button" value="Search" onclick="searchPeopleByFirstName()">
+</form>
+
+<h3>Current people:</h3>
+<table>
+    <thead> 
+        <th>First Name</th> 
+        <th>Last Name</th> 
+        <th>Homeworld</th>
+        <th>Age</th>  
+    </thead> 
+    <tbody>
+        {{#each people}} 
+        <tr> 
+            <td>{{fname}}</td> 
+            <td>{{lname}}</td> 
+            <td>{{homeworld}}</td> 
+            <td>{{age}}</td>
+            <td><button onclick="deletePerson({{id}})">Delete</button></td>
+            <td><a href="/people/{{id}}">Update</a></td>
+        </tr> 
+        {{/each}} 
+    </tbody> 
+</table> 
+</html>
