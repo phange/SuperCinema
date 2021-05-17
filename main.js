@@ -19,6 +19,9 @@ app.set('view engine', 'handlebars');
 app.set('port', process.argv[2]);
 app.set('port', 8953)   // sets port on flip2.engr.oregonstate.edu:8953
 app.set('mysql', mysql);
+app.set('/movies', require('/movies.js'));
+
+// Example lines
 app.use('/people_certs', require('./people_certs.js'));
 app.use('/people', require('./people.js'));
 app.use('/planets', require('./planets.js'));
