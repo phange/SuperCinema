@@ -8,6 +8,7 @@ var mysql = require('./dbcon.js');
 var bodyParser = require('body-parser');
 
 var app = express();
+// uses main.handlebars as template AKA defaultlayout
 var handlebars = require('express-handlebars').create({
         defaultLayout:'main',
         });
@@ -16,17 +17,20 @@ app.engine('handlebars', handlebars.engine);
 app.use(bodyParser.urlencoded({extended:true}));
 app.use('/static', express.static('public'));
 app.set('view engine', 'handlebars');
-app.set('port', process.argv[2]);
+// app.set('port', process.argv[2]);
 app.set('port', 8953)   // sets port on flip2.engr.oregonstate.edu:8953
 app.set('mysql', mysql);
-app.set('/movies', require('/movies.js'));
-
-// Example lines
 app.use('/people_certs', require('./people_certs.js'));
 app.use('/people', require('./people.js'));
 app.use('/planets', require('./planets.js'));
 app.use('/', express.static('public'));
 
+// new app.use for SuperCinema
+app.use('/movies', require('./movies.js'));
+
+
+
+// boilerplate error handlers
 app.use(function(req,res){
   res.status(404);
   res.render('404');

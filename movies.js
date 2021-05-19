@@ -50,7 +50,7 @@ module.exports = function(){
                 res.end();
             }
             context.people = results;
-            complete();
+            complete(); // this func make sure all callbacks finish before we go populate the page
         });
     }
 
@@ -63,7 +63,7 @@ module.exports = function(){
                 res.end();
             }
             context.person = results[0];
-            complete();
+            complete(); // this func make sure all callbacks finish before we go populate the page
         });
     }
 
@@ -76,7 +76,7 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);
-        function complete(){
+        function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
             if(callbackCount >= 2){
                 res.render('people', context);
