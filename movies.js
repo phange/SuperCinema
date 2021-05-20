@@ -3,16 +3,16 @@ module.exports = function(){
     var router = express.Router();
 
     // helper function for populating homeworld dropdown
-    function getPlanets(res, mysql, context, complete){
-        mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            context.planets  = results;
-            complete();
-        });
-    }
+    // function getPlanets(res, mysql, context, complete){
+    //     mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
+    //         if(error){
+    //             res.write(JSON.stringify(error));
+    //             res.end();
+    //         }
+    //         context.planets  = results;
+    //         complete();
+    //     });
+    // }
 
     function getPeople(res, mysql, context, complete){
         mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
@@ -24,6 +24,17 @@ module.exports = function(){
             complete();
         });
     }
+
+    // function getPeople(res, mysql, context, complete){
+    //     mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
+    //         if(error){
+    //             res.write(JSON.stringify(error));
+    //             res.end();
+    //         }
+    //         context.people = results;
+    //         complete();
+    //     });
+    // }
 
     // function getPeoplebyHomeworld(req, res, mysql, context, complete){
     //   var query = "SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.homeworld = ?";
@@ -76,7 +87,7 @@ module.exports = function(){
         context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
-        getPlanets(res, mysql, context, complete);
+        // getPlanets(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
             if(callbackCount >= 2){
