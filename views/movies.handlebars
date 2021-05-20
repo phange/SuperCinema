@@ -1,0 +1,39 @@
+{{#each foo}}
+{{this}}
+{{/each}}
+<h3>Add New Movie:</h3>
+<form id="addperson" action="/people" method="post">
+    Movie Title:    <input type="text" name="fname"><br>
+    Movie Genre:    <input type="text" name="lname"><br>
+    Movie Duration: <input type="text" name="lname"><br> 
+    Movie Restriction: <input type="text" name="lname"><br> 
+    Movie Description: <input type="text" name="lname"><br> 
+    <input type="submit" value="Submit">
+ </form>
+<br/>
+
+<br>
+<h3>Movies Database:</h3>
+<table>
+    <thead> 
+        <th>movieID</th> 
+        <th>movieTitle</th> 
+        <th>movieDuration</th>
+        <th>movieRestriction</th>  
+        <th>movieDescription</th>
+    </thead> 
+    <tbody>
+        {{#each people}} 
+        <tr> 
+            <td>{{fname}}</td> 
+            <td>{{lname}}</td> 
+            <td>{{homeworld}}</td> 
+            <td>{{age}}</td>
+            <td>{{fname}}</td>
+            <td><button onclick="deleteMovie({{id}})">Delete</button></td>  <!-- updated, not tested -->
+            <td><a href="/movie/{{id}}">Update</a></td>  <!-- updated, not tested -->
+        </tr> 
+        {{/each}} 
+    </tbody> 
+</table> 
+

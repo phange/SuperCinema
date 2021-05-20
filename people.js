@@ -2,6 +2,7 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 
+    // helper function for populating homeworld dropdown
     function getPlanets(res, mysql, context, complete){
         mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
             if(error){
