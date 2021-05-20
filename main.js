@@ -25,8 +25,12 @@ app.use('/people', require('./people.js'));
 app.use('/planets', require('./planets.js'));
 app.use('/', express.static('public'));
 
-// new app.use for SuperCinema
-app.use('/movies', require('./movies.js'));
+// new app.use for SuperCinema, require
+// app.use('/movies', require('./movies.js'));
+// alternate method for troubleshooting since movies.handlebars isnt being connected
+var movies = require('./movies.js');
+app.use('/movies', movies)
+
 
 
 
