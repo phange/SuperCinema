@@ -3,17 +3,18 @@ module.exports = function(){
     var router = express.Router();
 
     // helper function for populating homeworld dropdown
-    // function getPlanets(res, mysql, context, complete){
-    //     mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
-    //         if(error){
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }
-    //         context.planets  = results;
-    //         complete();
-    //     });
-    // }
+    function getPlanets(res, mysql, context, complete){
+        mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.planets  = results;
+            complete();
+        });
+    }
 
+    // helper function to pull the entire bsg_people db as 'results' which is stored into context.people for access by Handlebars as 'people'
     function getPeople(res, mysql, context, complete){
         mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
             if(error){
@@ -25,16 +26,17 @@ module.exports = function(){
         });
     }
 
-    // function getPeople(res, mysql, context, complete){
-    //     mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
-    //         if(error){
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }
-    //         context.people = results;
-    //         complete();
-    //     });
-    // }
+    // helper function to pull the entire Movies db as 'results' which is stored into context.movies for access by Handlebars as 'movies'
+    function getMovies(res, mysql, context, complete){
+        mysql.pool.query("SELECT Movies.movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.movies = results;
+            complete();
+        });
+    }
 
     // function getPeoplebyHomeworld(req, res, mysql, context, complete){
     //   var query = "SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.homeworld = ?";
@@ -87,10 +89,11 @@ module.exports = function(){
         context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
-        // getPlanets(res, mysql, context, complete);
+        getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
+        getMovies(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
-            if(callbackCount >= 2){
+            if(callbackCount >= 3){  // originally 2. but updated to 3 because i cant get rid of getPlanets
                 res.render('movies', context);
             }
 
