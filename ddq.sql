@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS `Customers`;
 
 CREATE TABLE `Customers` (
   `customerID` INT(11) NOT NULL AUTO_INCREMENT,
+  `customerName` varchar(255),
   `customerType` varchar(255),
   `customerEmail` varchar(255),
   PRIMARY KEY (`customerID`)
