@@ -26,6 +26,7 @@ app.use('/planets', require('./planets.js'));
 app.use('/movies', require('./movies.js')); 
 app.use('/customers', require('./customers.js'));
 app.use('/ticket_purchases', require('./ticketpurchases.js'));
+app.use('/showings', require('./showings.js')); 
 app.use('/', express.static('public'));
 
 // boilerplate error handlers

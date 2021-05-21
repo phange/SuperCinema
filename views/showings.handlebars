@@ -1,0 +1,47 @@
+{{#each foo}}
+{{this}}
+{{/each}}
+<h3>Add New Showing:</h3>
+<form id="addShowing" action="/showings" method="post">  <!-- changed to addMovie, not tested-->
+    showingID:      <input type="text" name="showingID"><br>
+    movieID:        <input type="text" name="movieID"><br>
+    roomID:         <input type="text" name="roomID"><br>
+    startTime       <input type="text" name="startTime"><br>
+    endTime         <input type="text" name="endTime"><br>
+    startDate       <input type="text" name="startDate"><br>
+    endDate         <input type="text" name="endDate"><br> 
+    capacity        <input type="text" name="capacity"><br> 
+    <input type="submit" value="Submit">
+ </form>
+<br/>
+
+<br>
+<h3>Showings Database:</h3>  <!--working!-->
+<table>
+    <thead> 
+        <th>showingID</th> 
+        <th>movieID</th> 
+        <th>roomID</th>
+        <th>startTime</th>
+        <th>endTime</th>
+        <th>startDate</th>
+        <th>endDate</th>
+        <th>capacity</th>
+    </thead> 
+    <tbody>
+        {{#each showings}} 
+        <tr> 
+            <td>{{id}}</td> 
+            <td>{{movieID}}</td> 
+            <td>{{roomID}}</td> 
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td> 
+            <td>{{startDate}}</td>
+            <td>{{endDate}}</td>
+            <td>{{capacity}}</td>
+            <td><button onclick="deleteShowing({{id}})">Delete</button></td>  <!-- updated, not tested -->
+            <td><a href="/showing/{{id}}">Update</a></td>  <!-- updated, not tested -->
+        </tr> 
+        {{/each}} 
+    </tbody> 
+</table> 
