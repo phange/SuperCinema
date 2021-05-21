@@ -26,15 +26,15 @@ module.exports = function(){
         });
     }
 
-    // helper function to pull the entire Movies db as 'results' which is stored into context.movies for access by Handlebars as 'movies'
+    // helper function to pull the entire Customers db as 'results' which is stored into context.customers for access by Handlebars as 'customers'
     // working!
-    function getMovies(res, mysql, context, complete){
-        mysql.pool.query("SELECT Movies.movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+    function getCustomers(res, mysql, context, complete){
+        mysql.pool.query("SELECT Customers.customerID as id, customerType, customerEmail FROM Customers", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
             }
-            context.movies = results;
+            context.customers = results;
             complete();
         });
     }
@@ -84,19 +84,19 @@ module.exports = function(){
     }
 
     /*Display all people. Requires web based javascript to delete users with AJAX*/
-
+    // modified for customers
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js
+        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js, not tested
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
-        getMovies(res, mysql, context, complete);
+        getCustomers(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
             if(callbackCount >= 3){  // originally 2. but updated to 3 because i cant get rid of getPlanets
-                res.render('movies', context);
+                res.render('customers', context);
             }
 
         }
@@ -171,21 +171,21 @@ module.exports = function(){
     //     });
     // });
 
-    // adds person to movies
-    // modified for movies, not tested yet
+    
+    // add for form
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO Movies (movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
-        var inserts = [req.body.movieTitle, req.body.movieGenre, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
+        var sql = "INSERT INTO Customers (customerType, customerEmail) VALUES (?,?)";
+        var inserts = [req.body.customerType, req.body.customerEmail];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                res.redirect('/movies');
+                res.redirect('/customers');
             }
         });
     });

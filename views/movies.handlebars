@@ -2,38 +2,39 @@
 {{this}}
 {{/each}}
 <h3>Add New Movie:</h3>
-<form id="addperson" action="/people" method="post">
-    Movie Title:    <input type="text" name="fname"><br>
-    Movie Genre:    <input type="text" name="lname"><br>
-    Movie Duration: <input type="text" name="lname"><br> 
-    Movie Restriction: <input type="text" name="lname"><br> 
-    Movie Description: <input type="text" name="lname"><br> 
+<form id="addMovie" action="/movies" method="post">  <!-- changed to addMovie, not tested-->
+    Movie Title:    <input type="text" name="movieTitle"><br>
+    Movie Genre:    <input type="text" name="movieGenre"><br>
+    Movie Duration: <input type="text" name="movieDuration"><br> 
+    Movie Restriction: <input type="text" name="movieRestriction"><br> 
+    Movie Description: <input type="text" name="movieDescription"><br> 
     <input type="submit" value="Submit">
  </form>
 <br/>
 
 <br>
-<h3>Movies Database:</h3>
+<h3>Movies Database:</h3>  <!--working!-->
 <table>
     <thead> 
         <th>movieID</th> 
         <th>movieTitle</th> 
+        <th>movieGenre</th>
         <th>movieDuration</th>
         <th>movieRestriction</th>  
         <th>movieDescription</th>
     </thead> 
     <tbody>
-        {{#each people}} 
+        {{#each movies}} 
         <tr> 
-            <td>{{fname}}</td> 
-            <td>{{lname}}</td> 
-            <td>{{homeworld}}</td> 
-            <td>{{age}}</td>
-            <td>{{fname}}</td>
+            <td>{{id}}</td> 
+            <td>{{movieTitle}}</td> 
+            <td>{{movieGenre}}</td> 
+            <td>{{movieDuration}}</td>
+            <td>{{movieRestriction}}</td> 
+            <td>{{movieDescription}}</td>
             <td><button onclick="deleteMovie({{id}})">Delete</button></td>  <!-- updated, not tested -->
             <td><a href="/movie/{{id}}">Update</a></td>  <!-- updated, not tested -->
         </tr> 
         {{/each}} 
     </tbody> 
 </table> 
-

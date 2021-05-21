@@ -23,16 +23,10 @@ app.set('mysql', mysql);
 app.use('/people_certs', require('./people_certs.js'));
 app.use('/people', require('./people.js'));
 app.use('/planets', require('./planets.js'));
+app.use('/movies', require('./movies.js')); 
+app.use('/customers', require('./customers.js'));
+app.use('/ticket_purchases', require('./ticketpurchases.js'));
 app.use('/', express.static('public'));
-
-// new app.use for SuperCinema, require
-// app.use('/movies', require('./movies.js'));
-// alternate method for troubleshooting since movies.handlebars isnt being connected
-var movies = require('./movies.js');
-app.use('/movies', movies)
-
-
-
 
 // boilerplate error handlers
 app.use(function(req,res){

@@ -1,0 +1,38 @@
+{{#each foo}}
+{{this}}
+{{/each}}
+<h3>Add New Ticket Purchase:</h3>
+<form id="addTicketPurchase" action="/ticket_purchases" method="post">  <!-- changed to addMovie, not tested-->
+    customerID:     <input type="text" name="customerType"><br>
+    movieID:        <input type="text" name="customerEmail"><br>
+    showingID:      <input type="text" name="customerEmail"><br>
+    roomID:         <input type="text" name="customerEmail"><br>
+    ticketPrice:    <input type="text" name="customerEmail"><br>
+    <input type="submit" value="Submit">
+ </form>
+<br/>
+
+<br>
+<h3>Ticket_Purchases Database:</h3>  <!--working!-->
+<table>
+    <thead> 
+        <th>customerID</th> 
+        <th>movieID</th> 
+        <th>showingID</th>
+        <th>roomID</th>
+        <th>ticketPrice</th>
+    </thead> 
+    <tbody>
+        {{#each ticketpurchases}} 
+        <tr> 
+            <td>{{customerID}}</td> 
+            <td>{{movieID}}</td> 
+            <td>{{showingID}}</td> 
+            <td>{{roomID}}</td> 
+            <td>{{ticketPrice}}</td> 
+            <td><button onclick="deleteTicketPurchase({{id}})">Delete</button></td>  <!-- updated, not tested -->
+            <td><a href="/ticket_purchases/{{id}}">Update</a></td>  <!-- updated, not tested -->
+        </tr> 
+        {{/each}} 
+    </tbody> 
+</table> 
