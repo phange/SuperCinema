@@ -15,7 +15,7 @@ CREATE TABLE `Customers` (
 
 LOCK TABLES `Customers` WRITE;
 
-INSERT INTO `Customers` (customerType, customerEmail)
+INSERT INTO `Customers` (customerName, customerType, customerEmail)
 VALUES 
 ('Adult', 'jasonbourne@gmail.com'),
 ('Adult', 'johnwick@gmail.com'),

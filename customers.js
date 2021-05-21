@@ -29,7 +29,7 @@ module.exports = function(){
     // helper function to pull the entire Customers db as 'results' which is stored into context.customers for access by Handlebars as 'customers'
     // working!
     function getCustomers(res, mysql, context, complete){
-        mysql.pool.query("SELECT Customers.customerID as id, customerType, customerEmail FROM Customers", function(error, results, fields){
+        mysql.pool.query("SELECT Customers.customerID as id, customerName, customerType, customerEmail FROM Customers", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -177,8 +177,8 @@ module.exports = function(){
         // console.log(req.body.homeworld)
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO Customers (customerType, customerEmail) VALUES (?,?)";
-        var inserts = [req.body.customerType, req.body.customerEmail];
+        var sql = "INSERT INTO Customers (customerName, customerType, customerEmail) VALUES (?,?,?)";
+        var inserts = [req.body.customerName, req.body.customerType, req.body.customerEmail];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
@@ -211,10 +211,26 @@ module.exports = function(){
     // });
 
     /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
-
+    /*
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
         var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+        var inserts = [req.params.id];
+        sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.status(400);
+                res.end();
+            }else{
+                res.status(202).end();
+            }
+        })
+    })
+    */
+    router.delete('/:id', function(req, res){
+        var mysql = req.app.get('mysql');
+        var sql = "DELETE FROM Customers WHERE customerID = ?";
         var inserts = [req.params.id];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
