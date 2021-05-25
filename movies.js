@@ -88,6 +88,7 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
+        // try deleting deleteperson, filterpeople, searchpeople.. 
         context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
@@ -106,7 +107,7 @@ module.exports = function(){
     // router.get('/filter/:homeworld', function(req, res){
     //     var callbackCount = 0;
     //     var context = {};
-    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
+    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js","deletemovie.js"];
     //     var mysql = req.app.get('mysql');
     //     getPeoplebyHomeworld(req,res, mysql, context, complete);
     //     getPlanets(res, mysql, context, complete);
@@ -123,7 +124,7 @@ module.exports = function(){
     // router.get('/search/:s', function(req, res){
     //     var callbackCount = 0;
     //     var context = {};
-    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
+    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js","deletemovie.js"];
     //     var mysql = req.app.get('mysql');
     //     getPeopleWithNameLike(req, res, mysql, context, complete);
     //     getPlanets(res, mysql, context, complete);
@@ -212,9 +213,25 @@ module.exports = function(){
 
     /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
 
+    // router.delete('/:id', function(req, res){
+    //     var mysql = req.app.get('mysql');
+    //     var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+    //     var inserts = [req.params.id];
+    //     sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+    //         if(error){
+    //             console.log(error)
+    //             res.write(JSON.stringify(error));
+    //             res.status(400);
+    //             res.end();
+    //         }else{
+    //             res.status(202).end();
+    //         }
+    //     })
+    // })
+
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+        var sql = "DELETE FROM Movies WHERE movieID = ?";
         var inserts = [req.params.id];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){

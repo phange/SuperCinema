@@ -13,6 +13,7 @@ module.exports = function(){
             complete();
         });
     }
+    
 
     /* get certificates to populate in dropdown */
     function getCertificates(res, mysql, context, complete){

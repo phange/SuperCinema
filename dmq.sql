@@ -27,11 +27,10 @@ DELETE FROM Movies WHERE movieID = :movieID;
 
 SELECT * FROM Customers;
 
-INSERT INTO Customers (customerName, customerType, customerEmail)
-VALUES (:customerName, :customerType, :customerEmail);
+INSERT INTO Customers (customerType, customerEmail)
+VALUES (:customerType, :customerEmail);
 
 UPDATE Customers SET
-    customerName = :customerName,
     customerType = :customerType,
     customerEmail = :customerEmail
     WHERE customerID = :customerID
