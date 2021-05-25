@@ -26,6 +26,40 @@ module.exports = function(){
         });
     }
 
+    // helper function to populate movies dropdown
+    function getMovies(res, mysql, context, complete){
+        mysql.pool.query("SELECT movieID, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.movies = results;
+            complete();
+        });
+    }    
+
+    function getShowings(res, mysql, context, complete){
+        mysql.pool.query("SELECT showingID, movieID, roomID, startTime, endTime, startDate, endDate, capacity FROM Showings", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.showings = results;
+            complete();
+        });
+    }   
+
+    function getCustomers(res, mysql, context, complete){
+        mysql.pool.query("SELECT customerID, customerName, customerType, customerEmail FROM Customers", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.customers = results;
+            complete();
+        });
+    }
+
     // helper function to pull the entire Ticket_Purchases db as 'results' which is stored into context.ticketpurchases for access by Handlebars as 'ticketpurchases'
     // working!
     function getTicketPurchases(res, mysql, context, complete){
@@ -92,10 +126,13 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
+        getMovies(res, mysql, context, complete);
+        getCustomers(res, mysql, context, complete);
+        getShowings(res, mysql, context, complete);
         getTicketPurchases(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
-            if(callbackCount >= 3){  // originally 2. but updated to 3 because i cant get rid of getPlanets
+            if(callbackCount >= 6){  // cant get rid of GetPlanets
                 res.render('ticketpurchases', context);
             }
 
@@ -178,7 +215,7 @@ module.exports = function(){
         console.log(req.body)
         var mysql = req.app.get('mysql');
         var sql = "INSERT INTO Ticket_Purchases (customerID, movieID, showingID, roomID, ticketPrice) VALUES (?,?,?,?,?)";
-        var inserts = [req.body.customerType, req.body.customerEmail];
+        var inserts = [req.body.customerID, req.body.movieID, req.body.showingID, req.body.roomID, req.body.ticketPrice];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))

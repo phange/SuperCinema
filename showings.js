@@ -25,6 +25,18 @@ module.exports = function(){
             complete();
         });
     }
+    // helper function to populate movies dropdown
+    function getMovies(res, mysql, context, complete){
+        mysql.pool.query("SELECT movieID, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.movies = results;
+            complete();
+        });
+    }
+  
 
     // helper function to pull the entire showings db as 'results' which is stored into context.showings for access by Handlebars as 'showings'
     // working!
@@ -92,10 +104,11 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
+        getMovies(res, mysql, context, complete);
         getShowings(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
-            if(callbackCount >= 3){  // originally 2. but updated to 3 because i cant get rid of getPlanets
+            if(callbackCount >= 4){  // originally 2. but updated to 4 because i cant get rid of getPlanets
                 res.render('showings', context);
             }
 
@@ -171,7 +184,7 @@ module.exports = function(){
     //     });
     // });
 
-    // adds person to showings
+    // adds movie to showings
     // modified for showings, not tested yet
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)

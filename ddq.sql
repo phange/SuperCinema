@@ -17,9 +17,9 @@ LOCK TABLES `Customers` WRITE;
 
 INSERT INTO `Customers` (customerName, customerType, customerEmail)
 VALUES 
-('Adult', 'jasonbourne@gmail.com'),
-('Adult', 'johnwick@gmail.com'),
-('Child', 'doratheexplorer@hotmail.com');
+('Jason Bourne','Adult', 'jasonbourne@gmail.com'),
+('Jonathan Wick','Adult', 'johnwick@gmail.com'),
+('Dora Johnson','Child', 'doratheexplorer@hotmail.com');
 
 UNLOCK TABLES;
 
@@ -69,9 +69,9 @@ LOCK TABLES `Showings` WRITE;
 
 INSERT INTO `Showings` (movieID, roomID, startTime, endTime, startDate, endDate, capacity)
 VALUES
-(1,1, '01:00:00', '03:30:00', '2021-05-01', '2021-05-30', 50),
-(2,2, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50),
-(3,3, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50);
+(16,1, '01:00:00', '03:30:00', '2021-05-01', '2021-05-30', 50),
+(17,2, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50),
+(18,3, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50);
 
 UNLOCK TABLES;
 
@@ -92,10 +92,10 @@ CREATE TABLE `Ticket_Purchases` (
 LOCK TABLES `Ticket_Purchases` WRITE;
 
 INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (1, 1, (select showingID from Showings where movieID=1), 1, 1.00);
+VALUES (23, 16, (select showingID from Showings where movieID=16), 1, 1.00);
 INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (2, 2, (select showingID from Showings where movieID=2), 1, 1.00);
+VALUES (24, 17, (select showingID from Showings where movieID=17), 1, 1.00);
 INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (3, 3, (select showingID from Showings where movieID=3), 1, 1.00);
+VALUES (25, 18, (select showingID from Showings where movieID=18), 1, 1.00);
 
 UNLOCK TABLES;
