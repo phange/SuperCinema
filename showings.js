@@ -100,7 +100,7 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js
+        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js", "deleteshowing.js"];  // added deleteMovie.js
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
@@ -185,7 +185,6 @@ module.exports = function(){
     // });
 
     // adds movie to showings
-    // modified for showings, not tested yet
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
@@ -227,7 +226,7 @@ module.exports = function(){
 
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+        var sql = "DELETE FROM Showings WHERE showingID = ?";
         var inserts = [req.params.id];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
