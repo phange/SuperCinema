@@ -3,11 +3,11 @@
 {{/each}}
 <h3>Add New Showing:</h3>
 <form id="addShowing" action="/showings" method="post">  <!-- changed to addMovie, not tested-->
-    movieID:        <input type="text" name="movieID"><br>
-    Movie: 
+    {{!-- movieID:        <input type="text" name="movieID"><br> --}}
+    movieID: 
     <select name='movieID'>  <!--something wrong in this code -->
         {{#each movies}}
-        <option value="{{movieID}}">{{movieGenre}}</option>
+        <option value="{{movieID}}">{{movieID}}</option>
         {{/each}}
     </select><br>      
     roomID:
