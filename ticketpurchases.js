@@ -4,7 +4,7 @@ module.exports = function(){
 
     // helper function for populating homeworld dropdown
     function getPlanets(res, mysql, context, complete){
-        mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
+        mysql.pool.query("SELECT planet_id as pid, name FROM bsg_planets", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -16,7 +16,7 @@ module.exports = function(){
 
     // helper function to pull the entire bsg_people db as 'results' which is stored into context.people for access by Handlebars as 'people'
     function getPeople(res, mysql, context, complete){
-        mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
+        mysql.pool.query("SELECT bsg_people.character_id as cid, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -105,7 +105,7 @@ module.exports = function(){
 
     // not being used
     function getPerson(res, mysql, context, id, complete){
-        var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
+        var sql = "SELECT character_id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
         var inserts = [id];
         mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
@@ -189,27 +189,8 @@ module.exports = function(){
 
     //     }
     // });
-
-    /* Adds a person, redirects to the people page after adding */
-    // router.post('/', function(req, res){
-    //     console.log(req.body.homeworld)
-    //     console.log(req.body)
-    //     var mysql = req.app.get('mysql');
-    //     var sql = "INSERT INTO bsg_people (fname, lname, homeworld, age) VALUES (?,?,?,?)";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(JSON.stringify(error))
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.redirect('/movies');
-    //         }
-    //     });
-    // });
-
     
-    // add for form, but should be changed because this table is treated differently
+    // add ticket purchases via form, but should be changed because this table is treated differently
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
@@ -249,25 +230,9 @@ module.exports = function(){
 
     /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
 
-    // router.delete('/:id', function(req, res){
-    //     var mysql = req.app.get('mysql');
-    //     var sql = "DELETE FROM bsg_people WHERE character_id = ?";
-    //     var inserts = [req.params.id];
-    //     sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-    //         if(error){
-    //             console.log(error)
-    //             res.write(JSON.stringify(error));
-    //             res.status(400);
-    //             res.end();
-    //         }else{
-    //             res.status(202).end();
-    //         }
-    //     })
-    // })
-
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM Ticket_Purchases ticketID = ?";
+        var sql = "DELETE FROM Ticket_Purchases WHERE ticketID = ?";
         var inserts = [req.params.id];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){

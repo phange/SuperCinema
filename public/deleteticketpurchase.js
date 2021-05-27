@@ -2,7 +2,7 @@
 
 function deleteTicketPurchase(id){
     $.ajax({
-        url: '/ticketpurchases/' + id,
+        url: '/ticket_purchases/' + id,
         type: 'DELETE',
         success: function(result){
             window.location.reload(true);
