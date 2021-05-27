@@ -78,24 +78,41 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Ticket_Purchases`;
 
-CREATE TABLE `Ticket_Purchases` (
-  `customerID` INT(11) NOT NULL, 
-  `movieID` INT(11) NOT NULL,  
-  `showingID` INT(11) NOT NULL,  
-  `roomID` INT(11) NOT NULL,
-  `ticketPrice` DECIMAL(10,2),
-  PRIMARY KEY (`customerID`, `movieID`),
-  FOREIGN KEY (`showingID`) REFERENCES `Showings` (`showingID`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+-- CREATE TABLE `Ticket_Purchases` (
+--   `customerID` INT(11) NOT NULL, 
+--   `movieID` INT(11) NOT NULL,  
+--   `showingID` INT(11) NOT NULL,  
+--   `roomID` INT(11) NOT NULL,
+--   `ticketPrice` DECIMAL(10,2),
+--   PRIMARY KEY (`customerID`, `movieID`),
+--   FOREIGN KEY (`showingID`) REFERENCES `Showings` (`showingID`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE `Ticket_Purchases` (
+  `ticketID` INT(11) NOT NULL AUTO_INCREMENT,
+  `customerID` INT(11) NOT NULL, 
+  `showingID` INT(11) NOT NULL,  
+  `ticketPrice` DECIMAL(10,2),
+  PRIMARY KEY (`ticketID`),
+  FOREIGN KEY (`showingID`) REFERENCES `Showings` (`showingID`),
+  FOREIGN KEY (`customerID`) REFERENCES `Customers` (`customerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 LOCK TABLES `Ticket_Purchases` WRITE;
 
-INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (23, 16, (select showingID from Showings where movieID=16), 1, 1.00);
-INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (24, 17, (select showingID from Showings where movieID=17), 1, 1.00);
-INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
-VALUES (25, 18, (select showingID from Showings where movieID=18), 1, 1.00);
+-- INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
+-- VALUES (23, 16, (select showingID from Showings where movieID=16), 1, 1.00);
+-- INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
+-- VALUES (24, 17, (select showingID from Showings where movieID=17), 1, 1.00);
+-- INSERT INTO `Ticket_Purchases` (customerID, movieID, showingID, roomID, ticketPrice)
+-- VALUES (25, 18, (select showingID from Showings where movieID=18), 1, 1.00);
+
+INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
+VALUES (23, 172, 20.00);
+INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
+VALUES (24, 173, 20.00);
+INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
+VALUES (25, 174, 20.00);
 
 UNLOCK TABLES;

@@ -63,7 +63,7 @@ module.exports = function(){
     // helper function to pull the entire Ticket_Purchases db as 'results' which is stored into context.ticketpurchases for access by Handlebars as 'ticketpurchases'
     // working!
     function getTicketPurchases(res, mysql, context, complete){
-        mysql.pool.query("SELECT customerID, movieID, showingID, roomID, ticketPrice FROM Ticket_Purchases", function(error, results, fields){
+        mysql.pool.query("SELECT ticketID as id, customerID, showingID, ticketPrice FROM Ticket_Purchases", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -122,7 +122,7 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js", "deleteticketpurchase.js"];  // added deleteMovie.js, not tested
+        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js", "deleteticketpurchase.js"];  
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
@@ -214,8 +214,8 @@ module.exports = function(){
         // console.log(req.body.homeworld)
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO Ticket_Purchases (customerID, movieID, showingID, roomID, ticketPrice) VALUES (?,?,?,?,?)";
-        var inserts = [req.body.customerID, req.body.movieID, req.body.showingID, req.body.roomID, req.body.ticketPrice];
+        var sql = "INSERT INTO Ticket_Purchases (customerID, showingID, ticketPrice) VALUES (?,?,?)";
+        var inserts = [req.body.customerID, req.body.showingID, req.body.ticketPrice];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
@@ -249,9 +249,25 @@ module.exports = function(){
 
     /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
 
+    // router.delete('/:id', function(req, res){
+    //     var mysql = req.app.get('mysql');
+    //     var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+    //     var inserts = [req.params.id];
+    //     sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+    //         if(error){
+    //             console.log(error)
+    //             res.write(JSON.stringify(error));
+    //             res.status(400);
+    //             res.end();
+    //         }else{
+    //             res.status(202).end();
+    //         }
+    //     })
+    // })
+
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM bsg_people WHERE character_id = ?";
+        var sql = "DELETE FROM Ticket_Purchases ticketID = ?";
         var inserts = [req.params.id];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
