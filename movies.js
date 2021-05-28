@@ -4,7 +4,7 @@ module.exports = function(){
 
     // helper function for populating homeworld dropdown
     function getPlanets(res, mysql, context, complete){
-        mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
+        mysql.pool.query("SELECT planet_id as pid, name FROM bsg_planets", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -16,7 +16,7 @@ module.exports = function(){
 
     // helper function to pull the entire bsg_people db as 'results' which is stored into context.people for access by Handlebars as 'people'
     function getPeople(res, mysql, context, complete){
-        mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
+        mysql.pool.query("SELECT bsg_people.character_id as cid, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -27,7 +27,6 @@ module.exports = function(){
     }
 
     // helper function to pull the entire Movies db as 'results' which is stored into context.movies for access by Handlebars as 'movies'
-    // working!
     function getMovies(res, mysql, context, complete){
         mysql.pool.query("SELECT Movies.movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
             if(error){
@@ -69,7 +68,7 @@ module.exports = function(){
     //     });
     // }
 
-    // not being used
+    // helper function for UPDATE person
     function getPerson(res, mysql, context, id, complete){
         var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
         var inserts = [id];
@@ -82,6 +81,20 @@ module.exports = function(){
             complete(); // this func make sure all callbacks finish before we go populate the page
         });
     }
+
+    // helper function for UPDATE movie
+    function getMovie(res, mysql, context, id, complete){
+        var sql = "SELECT movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies WHERE movieID = ?";
+        var inserts = [id];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.movie = results[0];
+            complete(); // this func make sure all callbacks finish before we go populate the page
+        });
+    }    
 
     /*Display all people. Requires web based javascript to delete users with AJAX*/
 
@@ -154,24 +167,26 @@ module.exports = function(){
     //     }
     // });
 
-    /* Adds a person, redirects to the people page after adding */
-    // router.post('/', function(req, res){
-    //     console.log(req.body.homeworld)
-    //     console.log(req.body)
-    //     var mysql = req.app.get('mysql');
-    //     var sql = "INSERT INTO bsg_people (fname, lname, homeworld, age) VALUES (?,?,?,?)";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(JSON.stringify(error))
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.redirect('/movies');
-    //         }
-    //     });
-    // });
+    /* Display one movie for the specific purpose of updating movies */
+    router.get('/:id', function(req, res){
+        callbackCount = 0;
+        var context = {};
+        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatemovie.js"];
+        var mysql = req.app.get('mysql');
+        getPerson(res, mysql, context, req.params.id, complete); 
+        getPlanets(res, mysql, context, complete);
+        getMovie(res, mysql, context, req.params.id, complete); 
+        getMovies(res, mysql, context, complete);
+        function complete(){
+            callbackCount++;
+            if(callbackCount >= 4){
+                res.render('updatemovie', context);
+            }
 
+        }
+    });
+
+    // Insert
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
@@ -189,30 +204,29 @@ module.exports = function(){
         });
     });
 
-    /* The URI that update data is sent to in order to update a person */
-
-    // router.put('/:id', function(req, res){
-    //     var mysql = req.app.get('mysql');
-    //     console.log(req.body)
-    //     console.log(req.params.id)
-    //     var sql = "UPDATE bsg_people SET fname=?, lname=?, homeworld=?, age=? WHERE character_id=?";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age, req.params.id];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(error)
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.status(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+    /* The URI that update data is sent to in order to update a movie */
+    router.put('/:id', function(req, res){
+        var mysql = req.app.get('mysql');
+        console.log(req.body)
+        console.log(req.params.id)
+        var sql = "UPDATE Movies SET movieTitle=?, movieGenre=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";
+        var inserts = [req.body.movieTitle, req.body.movieGenre, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+    });
 
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
         var sql = "DELETE FROM Movies WHERE movieID = ?";
-        var inserts = [req.params.id];
+        var inserts = [req.params.id];  // movieID vs. id
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
                 console.log(error)

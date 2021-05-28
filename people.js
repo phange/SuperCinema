@@ -55,6 +55,7 @@ module.exports = function(){
         });
     }
 
+    // helper function for UPDATE person
     function getPerson(res, mysql, context, id, complete){
         var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
         var inserts = [id];
