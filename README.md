@@ -1,3 +1,3 @@
-# CS290-Server-Side-Examples
+# SuperCinema
 
-This sample application requires the database dump **bsg_db.sql** to be setup *before* you can run the application. This is different from the database dump you used in other weeks of the CS340 class.
+This is a movie ticket and management system for small time theatre SuperCinema. The SuperCinema business has 3 locations, each with 6 theatre rooms and 50 seats in each room. This DBMS can handle up to 1,000,000 unique customers and store information for up to 10,000 movies.
