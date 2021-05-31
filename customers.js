@@ -69,7 +69,6 @@ module.exports = function(){
     //     });
     // }
 
-    // not being used
     function getPerson(res, mysql, context, id, complete){
         var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
         var inserts = [id];
@@ -79,6 +78,19 @@ module.exports = function(){
                 res.end();
             }
             context.person = results[0];
+            complete(); // this func make sure all callbacks finish before we go populate the page
+        });
+    }
+
+    function getCustomer(res, mysql, context, id, complete){
+        var sql = "SELECT customerID as id, customerName, customerType, customerEmail FROM Customers WHERE customerID = ?";
+        var inserts = [id];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.customer = results[0];
             complete(); // this func make sure all callbacks finish before we go populate the page
         });
     }
@@ -137,21 +149,22 @@ module.exports = function(){
 
     /* Display one person for the specific purpose of updating people */
 
-    // router.get('/:id', function(req, res){
-    //     callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["selectedplanet.js", "updateperson.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPerson(res, mysql, context, req.params.id, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('update-person', context);
-    //         }
+    router.get('/:id', function(req, res){
+        callbackCount = 0;
+        var context = {};
+        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatecustomer.js"];
+        var mysql = req.app.get('mysql');
+        getPerson(res, mysql, context, req.params.id, complete);
+        getPlanets(res, mysql, context, complete);
+        getCustomer(res, mysql, context, req.params.id, complete);
+        function complete(){
+            callbackCount++;
+            if(callbackCount >= 3){
+                res.render('update-customer', context);
+            }
 
-    //     }
-    // });
+        }
+    });
 
     /* Adds a person, redirects to the people page after adding */
     // router.post('/', function(req, res){
@@ -192,26 +205,25 @@ module.exports = function(){
 
     /* The URI that update data is sent to in order to update a person */
 
-    // router.put('/:id', function(req, res){
-    //     var mysql = req.app.get('mysql');
-    //     console.log(req.body)
-    //     console.log(req.params.id)
-    //     var sql = "UPDATE bsg_people SET fname=?, lname=?, homeworld=?, age=? WHERE character_id=?";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age, req.params.id];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(error)
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.status(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+    router.put('/:id', function(req, res){
+        var mysql = req.app.get('mysql');
+        console.log(req.body)
+        console.log(req.params.id)
+        var sql = "UPDATE Customers SET customerName=?, customerType=?, customerEmail WHERE customerID=?";
+        var inserts = [req.body.customerName, req.body.customerType, req.body.customerEmail, req.params.id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+    });
 
-    /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
-
+    /* Route to delete, simply returns a 202 upon success. Ajax will handle this. */
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');
         var sql = "DELETE FROM Customers WHERE customerID = ?";

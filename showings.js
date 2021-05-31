@@ -95,6 +95,19 @@ module.exports = function(){
         });
     }
 
+    function getShowing(res, mysql, context, id, complete){
+        var sql = "SELECT showingID as id, movieID, roomID, startTime, endTime, startDate, endDate, capacity FROM Showings WHERE showingID = ?";
+        var inserts = [id];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.showing = results[0];
+            complete(); // this func make sure all callbacks finish before we go populate the page
+        });
+    }
+
     /*Display all people. Requires web based javascript to delete users with AJAX*/
 
     router.get('/', function(req, res){
@@ -150,29 +163,30 @@ module.exports = function(){
 
     /* Display one person for the specific purpose of updating people */
 
-    // router.get('/:id', function(req, res){
-    //     callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["selectedplanet.js", "updateperson.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPerson(res, mysql, context, req.params.id, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('update-person', context);
-    //         }
+    router.get('/:id', function(req, res){
+        callbackCount = 0;
+        var context = {};
+        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updateshowing.js"];
+        var mysql = req.app.get('mysql');
+        getPerson(res, mysql, context, req.params.id, complete);        
+        getPlanets(res, mysql, context, complete);
+        getShowing(res, mysql, context, req.params.id, complete);
+        function complete(){
+            callbackCount++;
+            if(callbackCount >= 3){
+                res.render('update-showing', context);
+            }
 
-    //     }
-    // });
+        }
+    });
 
     // adds showing
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO Showings (showingID, movieID, roomID, startTime, endTime, startDate, endDate, capacity) VALUES (?,?,?,?,?,?,?,?)";
-        var inserts = [req.body.showingID, req.body.movieID, req.body.roomID, req.body.startTime, req.body.endTime, req.body.startDate, req.body.endDate, req.body.capacity];
+        var sql = "INSERT INTO Showings (movieID, roomID, startTime, endTime, startDate, endDate, capacity) VALUES (?,?,?,?,?,?,?)";
+        var inserts = [req.body.movieID, req.body.roomID, req.body.startTime, req.body.endTime, req.body.startDate, req.body.endDate, req.body.capacity];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
@@ -184,25 +198,25 @@ module.exports = function(){
         });
     });
 
-    /* The URI that update data is sent to in order to update a person */
+    /* The URI that update data is sent to in order to update a showing */
 
-    // router.put('/:id', function(req, res){
-    //     var mysql = req.app.get('mysql');
-    //     console.log(req.body)
-    //     console.log(req.params.id)
-    //     var sql = "UPDATE bsg_people SET fname=?, lname=?, homeworld=?, age=? WHERE character_id=?";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age, req.params.id];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(error)
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.status(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+    router.put('/:id', function(req, res){
+        var mysql = req.app.get('mysql');
+        console.log(req.body)
+        console.log(req.params.id)
+        var sql = "UPDATE Showings SET movieID=?, roomID=?, startTime=?, endTime=?, startDate=?, endDate=?, capacity=? WHERE showingID=?";
+        var inserts = [req.body.movieID, req.body.roomID, req.body.startTime, req.body.endTime, req.body.startDate, req.body.endDate, req.body.capacity, req.params.id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+    });
 
     /* Route to delete a showing, simply returns a 202 upon success. Ajax will handle this. */
 

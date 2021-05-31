@@ -29,6 +29,7 @@ app.use('/ticket_purchases', require('./ticketpurchases.js'));
 app.use('/showings', require('./showings.js')); 
 app.use('/', express.static('public'));
 
+
 // boilerplate error handlers
 app.use(function(req,res){
   res.status(404);

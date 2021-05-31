@@ -2,10 +2,9 @@
 {{this}}
 {{/each}}
 <h3>Add New Showing:</h3>
-<form id="addShowing" action="/showings" method="post">  <!-- changed to addMovie, not tested-->
-    {{!-- movieID:        <input type="text" name="movieID"><br> --}}
+<form id="addShowing" action="/showings" method="post"> 
     movieID: 
-    <select name='movieID'>  <!--something wrong in this code -->
+    <select name='movieID'> 
         {{#each movies}}
         <option value="{{movieID}}">{{movieID}}</option>
         {{/each}}
@@ -32,7 +31,7 @@
 <br/>
 
 <br>
-<h3>Showings Database:</h3>  <!--working!-->
+<h3>Showings Database:</h3>
 <table>
     <thead> 
         <th>showingID</th> 
@@ -55,8 +54,8 @@
             <td>{{startDate}}</td>
             <td>{{endDate}}</td>
             <td>{{capacity}}</td>
-            <td><button onclick="deleteShowing({{id}})">Delete</button></td>  <!-- updated, not tested -->
-            <td><a href="/showings/{{id}}">Update</a></td>  <!-- updated, not tested -->
+            <td><button onclick="deleteShowing({{id}})">Delete</button></td>
+            <td><a href="/showings/{{id}}">Update</a></td>  
         </tr> 
         {{/each}} 
     </tbody> 

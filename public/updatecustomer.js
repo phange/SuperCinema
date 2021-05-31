@@ -1,8 +1,8 @@
-function updateMovie(id){
+function updateCustomer(id){
     $.ajax({
-        url: '/movies/' + id,
+        url: '/customers/' + id,
         type: 'PUT',
-        data: $('#update-movie').serialize(),
+        data: $('#update-customer').serialize(),
         success: function(result){
             window.location.replace("./");
         }
