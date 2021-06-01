@@ -2,7 +2,7 @@
 {{this}}
 {{/each}}
 <h3>Add New Movie:</h3>
-<form id="addMovie" action="/movies" method="post">  <!-- changed to addMovie, not tested-->
+<form id="addMovie" action="/movies" method="post">
     Movie Title:    <input type="text" name="movieTitle"><br>
     Movie Genre:    
     <select name="movieGenre" id="type">
@@ -25,21 +25,6 @@
  </form>
 <br/>
 
-<form id='search_people' action='' method=''>
-<!--- this form does not submit directly, the button handles all the interaction with backend -->
-    <label> Search people for first name starting with:</label>
-    <input id='first_name_search_string' type='text' name='first_name_search_string' value=''>
-    <input type="button" value="Search" onclick="searchPeopleByFirstName()">
-</form>
-
-<!--test form using event listening-->
-{{!-- <form id='search_people' action='' method=''>
-<!--- this form does not submit directly, the button handles all the interaction with backend -->
-    <label> Search people for first name starting with:</label>
-    <input id='first_name_search_string' type='text' name='first_name_search_string' value=''>
-    <input type="button" value="Search" onclick="searchPeopleByFirstName()">
-</form> --}}
-
 <form id='search_movies' action='' method=''>
 <!--- this form does not submit directly, the button handles all the interaction with backend -->
     <label> Search Movies for movie title starting with:</label>
@@ -48,7 +33,7 @@
 </form>
 
 <br>
-<h3>Movies Database:</h3>  <!--working!-->
+<h3>Movies Database:</h3>
 <table>
     <thead> 
         <th>movieID</th> 
@@ -73,10 +58,3 @@
         {{/each}} 
     </tbody> 
 </table> 
-
-{{!-- <script type="text/javascript">
-{{!-- document.getElementById ("search_movies_button").addEventListener ("click", myFunction, false);
-    function myFunction() {
-        alert("Hello! I am an alert box!!");
-    }    --}}
-</script> --}}

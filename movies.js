@@ -39,7 +39,7 @@ module.exports = function(){
     }
 
     function getPeoplebyHomeworld(req, res, mysql, context, complete){
-      var query = "SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.homeworld = ?";
+      var query = "SELECT bsg_people.character_id as cid, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.homeworld = ?";
       console.log(req.params)
       var inserts = [req.params.homeworld]
       mysql.pool.query(query, inserts, function(error, results, fields){
@@ -153,13 +153,15 @@ module.exports = function(){
         var context = {};
         context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatemovie.js"];
         var mysql = req.app.get('mysql');
-        getPerson(res, mysql, context, req.params.id, complete); 
-        getPlanets(res, mysql, context, complete);
+        // getPerson(res, mysql, context, req.params.id, complete); 
+        // getPlanets(res, mysql, context, complete);
+        console.log("req.params.id")
+        console.log(JSON.stringify(req.params.id))
         getMovie(res, mysql, context, req.params.id, complete); 
         getMovies(res, mysql, context, complete);
         function complete(){
             callbackCount++;
-            if(callbackCount >= 4){
+            if(callbackCount >= 2){
                 res.render('update-movie', context);
             }
 
@@ -187,10 +189,18 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a movie */
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        console.log(req.body)
-        console.log(req.params.id)
-        var sql = "UPDATE Movies SET movieTitle=?, movieGenre=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";
+        // console.log(req.body)
+        // console.log(req.params.id)
+        // the query works
+        var sql = "UPDATE Movies SET movieTitle=?, movieGenre=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
         var inserts = [req.body.movieTitle, req.body.movieGenre, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
+        console.log("inserts")
+        console.log(JSON.stringify(inserts))
+        console.log("req.body.movieTitle")
+        console.log(JSON.stringify(req.body.movieTitle))
+        console.log("req.params.id")
+        console.log(JSON.stringify(req.params.id))
+        // console.log("inserts")
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error)

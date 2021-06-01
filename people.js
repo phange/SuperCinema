@@ -165,6 +165,11 @@ module.exports = function(){
         console.log(req.params.id)
         var sql = "UPDATE bsg_people SET fname=?, lname=?, homeworld=?, age=? WHERE character_id=?";
         var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age, req.params.id];
+        console.log("inserts")
+        console.log(JSON.stringify(inserts))
+        console.log("req.params.id")
+        console.log(JSON.stringify(req.params.id))
+        // req.params.id is pulling from URL here in people.js, but is not in movies.js
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error)

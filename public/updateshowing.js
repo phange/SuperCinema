@@ -1,6 +1,6 @@
 function updateShowing(id){
     $.ajax({
-        url: '/people/' + id,
+        url: '/showings/' + id,
         type: 'PUT',
         data: $('#update-showing').serialize(),
         success: function(result){
