@@ -1,5 +1,3 @@
-// test file modeled after deletepeople.js
-
 function deleteCustomer(id){
     $.ajax({
         url: '/customers/' + id,

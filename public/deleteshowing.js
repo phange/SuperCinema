@@ -1,5 +1,3 @@
-// test file modeled after deletepeople.js
-
 function deleteShowing(id){
     $.ajax({
         url: '/showings/' + id,

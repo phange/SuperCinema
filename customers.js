@@ -27,7 +27,6 @@ module.exports = function(){
     }
 
     // helper function to pull the entire Customers db as 'results' which is stored into context.customers for access by Handlebars as 'customers'
-    // working!
     function getCustomers(res, mysql, context, complete){
         mysql.pool.query("SELECT Customers.customerID as id, customerName, customerType, customerEmail FROM Customers", function(error, results, fields){
             if(error){
@@ -38,36 +37,6 @@ module.exports = function(){
             complete();
         });
     }
-
-    // function getPeoplebyHomeworld(req, res, mysql, context, complete){
-    //   var query = "SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.homeworld = ?";
-    //   console.log(req.params)
-    //   var inserts = [req.params.homeworld]
-    //   mysql.pool.query(query, inserts, function(error, results, fields){
-    //         if(error){
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }
-    //         context.people = results;
-    //         complete();
-    //     });
-    // }
-
-    /* Find people whose fname starts with a given string in the req */
-    // function getPeopleWithNameLike(req, res, mysql, context, complete) {
-    //   //sanitize the input as well as include the % character
-    //    var query = "SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id WHERE bsg_people.fname LIKE " + mysql.pool.escape(req.params.s + '%');
-    //   console.log(query)
-
-    //   mysql.pool.query(query, function(error, results, fields){
-    //         if(error){
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }
-    //         context.people = results;
-    //         complete(); // this func make sure all callbacks finish before we go populate the page
-    //     });
-    // }
 
     function getPerson(res, mysql, context, id, complete){
         var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
@@ -114,40 +83,7 @@ module.exports = function(){
         }
     });
 
-    /*Display all people from a given homeworld. Requires web based javascript to delete users with AJAX*/
-    // router.get('/filter/:homeworld', function(req, res){
-    //     var callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPeoplebyHomeworld(req,res, mysql, context, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('movies', context);
-    //         }
-
-    //     }
-    // });
-
-    /*Display all people whose name starts with a given string. Requires web based javascript to delete users with AJAX */
-    // router.get('/search/:s', function(req, res){
-    //     var callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPeopleWithNameLike(req, res, mysql, context, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('movies', context);
-    //         }
-    //     }
-    // });
-
-    /* Display one person for the specific purpose of updating people */
+    /* Display one person for the specific purpose of updating customer */
 
     router.get('/:id', function(req, res){
         callbackCount = 0;
@@ -165,31 +101,12 @@ module.exports = function(){
 
         }
     });
-
-    /* Adds a person, redirects to the people page after adding */
-    // router.post('/', function(req, res){
-    //     console.log(req.body.homeworld)
-    //     console.log(req.body)
-    //     var mysql = req.app.get('mysql');
-    //     var sql = "INSERT INTO bsg_people (fname, lname, homeworld, age) VALUES (?,?,?,?)";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(JSON.stringify(error))
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.redirect('/movies');
-    //         }
-    //     });
-    // });
-
     
-    // add for form
+    /* Adds a customer, redirects to the customers page after adding */
     router.post('/', function(req, res){
-        // console.log(req.body.homeworld)
-        console.log(req.body)
         var mysql = req.app.get('mysql');
+        console.log("req.body from post add form")
+        console.log(req.body)
         var sql = "INSERT INTO Customers (customerName, customerType, customerEmail) VALUES (?,?,?)";
         var inserts = [req.body.customerName, req.body.customerType, req.body.customerEmail];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
@@ -198,18 +115,21 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
+                console.log("Sucessfully added new customer!")
                 res.redirect('/customers');
             }
         });
     });
 
-    /* The URI that update data is sent to in order to update a person */
+    /* The URI that update data is sent to in order to update a customer */
 
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
+        console.log("req.body from update is")
         console.log(req.body)
+        console.log("req.params.id from update is")
         console.log(req.params.id)
-        var sql = "UPDATE Customers SET customerName=?, customerType=?, customerEmail WHERE customerID=?";
+        var sql = "UPDATE Customers SET customerName=?, customerType=?, customerEmail=? WHERE customerID=?";
         var inserts = [req.body.customerName, req.body.customerType, req.body.customerEmail, req.params.id];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
@@ -217,8 +137,10 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
+                console.log("Successfully updated customer!")
                 res.status(200);
                 res.end();
+                // res.redirect('/customers');
             }
         });
     });

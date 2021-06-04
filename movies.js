@@ -14,6 +14,17 @@ module.exports = function(){
         });
     }
 
+    function getGenres(res, mysql, context, complete){
+        mysql.pool.query("SELECT genreID, genreName FROM Genres", function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.genres  = results; 
+            complete();
+        });
+    }    
+
     // helper function to pull the entire bsg_people db as 'results' which is stored into context.people for access by Handlebars as 'people'
     function getPeople(res, mysql, context, complete){
         mysql.pool.query("SELECT bsg_people.character_id as cid, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
@@ -28,7 +39,7 @@ module.exports = function(){
 
     // helper function to pull the entire Movies db as 'results' which is stored into context.movies for access by Handlebars as 'movies'
     function getMovies(res, mysql, context, complete){
-        mysql.pool.query("SELECT Movies.movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+        mysql.pool.query("SELECT Movies.movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -70,7 +81,7 @@ module.exports = function(){
     /* Find people whose fname starts with a given string in the req */
     function getMovieWithNameLike(req, res, mysql, context, complete) {
       //sanitize the input as well as include the % character
-       var query = "SELECT Movie.movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies WHERE Movies.movieTitle LIKE " + mysql.pool.escape(req.params.s + '%');
+       var query = "SELECT Movie.movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies WHERE Movies.movieTitle LIKE " + mysql.pool.escape(req.params.s + '%');
       console.log(query)
       mysql.pool.query(query, function(error, results, fields){
             if(error){
@@ -98,7 +109,7 @@ module.exports = function(){
 
     // helper function for UPDATE movie
     function getMovie(res, mysql, context, id, complete){
-        var sql = "SELECT movieID as id, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies WHERE movieID = ?";
+        var sql = "SELECT movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies WHERE movieID = ?";
         var inserts = [id];
         mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
@@ -115,14 +126,15 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js
+        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  
         var mysql = req.app.get('mysql');
         getPeople(res, mysql, context, complete);
         getPlanets(res, mysql, context, complete);  // if this is removed, entire page does not load!
         getMovies(res, mysql, context, complete);
+        getGenres(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
             callbackCount++;
-            if(callbackCount >= 3){  // originally 2. but updated to 3 because i cant get rid of getPlanets
+            if(callbackCount >= 4){ 
                 res.render('movies', context);
             }
 
@@ -138,10 +150,10 @@ module.exports = function(){
         getMovieWithNameLike(req, res, mysql, context, complete);
         getPeopleWithNameLike(req, res, mysql, context, complete);        
         getPlanets(res, mysql, context, complete);
-
+        getGenres(res, mysql, context, complete);
         function complete(){
             callbackCount++;
-            if(callbackCount >= 3){
+            if(callbackCount >= 4){
                 res.render('movies', context);
             }
         }
@@ -151,17 +163,18 @@ module.exports = function(){
     router.get('/:id', function(req, res){
         callbackCount = 0;
         var context = {};
-        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatemovie.js"];
+        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatemovie.js", "selectedgenre.js"];
         var mysql = req.app.get('mysql');
-        // getPerson(res, mysql, context, req.params.id, complete); 
-        // getPlanets(res, mysql, context, complete);
+        getPerson(res, mysql, context, req.params.id, complete); 
+        getPlanets(res, mysql, context, complete);
         console.log("req.params.id")
         console.log(JSON.stringify(req.params.id))
         getMovie(res, mysql, context, req.params.id, complete); 
         getMovies(res, mysql, context, complete);
+        getGenres(res, mysql, context, complete);
         function complete(){
             callbackCount++;
-            if(callbackCount >= 2){
+            if(callbackCount >= 5){
                 res.render('update-movie', context);
             }
 
@@ -173,8 +186,8 @@ module.exports = function(){
         // console.log(req.body.homeworld)
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO Movies (movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
-        var inserts = [req.body.movieTitle, req.body.movieGenre, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
+        var sql = "INSERT INTO Movies (movieTitle, genreID, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
+        var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
@@ -189,18 +202,12 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a movie */
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        // console.log(req.body)
-        // console.log(req.params.id)
-        // the query works
-        var sql = "UPDATE Movies SET movieTitle=?, movieGenre=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
-        var inserts = [req.body.movieTitle, req.body.movieGenre, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
+        var sql = "UPDATE Movies SET movieTitle=?, genreID=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
+        var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
         console.log("inserts")
         console.log(JSON.stringify(inserts))
-        console.log("req.body.movieTitle")
-        console.log(JSON.stringify(req.body.movieTitle))
         console.log("req.params.id")
         console.log(JSON.stringify(req.params.id))
-        // console.log("inserts")
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error)

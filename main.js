@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use('/static', express.static('public'));
 app.set('view engine', 'handlebars');
 // app.set('port', process.argv[2]);
-app.set('port', 8953)   // sets port on flip2.engr.oregonstate.edu:8953
+app.set('port', 8953)   // sets port on flip1.engr.oregonstate.edu:8953
 app.set('mysql', mysql);
 app.use('/people_certs', require('./people_certs.js'));
 app.use('/people', require('./people.js'));
@@ -27,6 +27,7 @@ app.use('/movies', require('./movies.js'));
 app.use('/customers', require('./customers.js'));
 app.use('/ticket_purchases', require('./ticketpurchases.js'));
 app.use('/showings', require('./showings.js')); 
+app.use('/genres', require('./genres.js')); 
 app.use('/', express.static('public'));
 
 

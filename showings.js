@@ -206,6 +206,10 @@ module.exports = function(){
         console.log(req.params.id)
         var sql = "UPDATE Showings SET movieID=?, roomID=?, startTime=?, endTime=?, startDate=?, endDate=?, capacity=? WHERE showingID=?";
         var inserts = [req.body.movieID, req.body.roomID, req.body.startTime, req.body.endTime, req.body.startDate, req.body.endDate, req.body.capacity, req.params.id];
+        console.log("req.params.id")
+        console.log(JSON.stringify(req.params.id))
+        console.log("inserts")
+        console.log(JSON.stringify(inserts))
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error)

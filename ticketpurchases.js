@@ -28,7 +28,7 @@ module.exports = function(){
 
     // helper function to populate movies dropdown
     function getMovies(res, mysql, context, complete){
-        mysql.pool.query("SELECT movieID, movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+        mysql.pool.query("SELECT movieID, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -117,6 +117,19 @@ module.exports = function(){
         });
     }
 
+    function getTicketPurchase(res, mysql, context, id, complete){
+        var sql = "SELECT ticketID, customerID, showingID, ticketPrice FROM Ticket_Purchases WHERE ticketID=?";
+        var inserts = [id];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.ticketpurchase = results[0];
+            complete(); // this func make sure all callbacks finish before we go populate the page
+        });
+    }
+
     /*Display all people. Requires web based javascript to delete users with AJAX*/
     // modified for ticket purchases
     router.get('/', function(req, res){
@@ -156,41 +169,27 @@ module.exports = function(){
     //     }
     // });
 
-    /*Display all people whose name starts with a given string. Requires web based javascript to delete users with AJAX */
-    // router.get('/search/:s', function(req, res){
-    //     var callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPeopleWithNameLike(req, res, mysql, context, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('movies', context);
-    //         }
-    //     }
-    // });
 
-    /* Display one person for the specific purpose of updating people */
+    /* Display one ticketpurchase for the specific purpose of updating ticketpurchase */
 
-    // router.get('/:id', function(req, res){
-    //     callbackCount = 0;
-    //     var context = {};
-    //     context.jsscripts = ["selectedplanet.js", "updateperson.js"];
-    //     var mysql = req.app.get('mysql');
-    //     getPerson(res, mysql, context, req.params.id, complete);
-    //     getPlanets(res, mysql, context, complete);
-    //     function complete(){
-    //         callbackCount++;
-    //         if(callbackCount >= 2){
-    //             res.render('update-person', context);
-    //         }
+    router.get('/:id', function(req, res){
+        callbackCount = 0;
+        var context = {};
+        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updateticketpurchase.js"];
+        var mysql = req.app.get('mysql');
+        getPerson(res, mysql, context, req.params.id, complete);
+        getPlanets(res, mysql, context, complete);
+        getTicketPurchase(res, mysql, context, req.params.id, complete);
+        function complete(){
+            callbackCount++;
+            if(callbackCount >= 3){
+                res.render('update-ticketpurchase', context);
+            }
 
-    //     }
-    // });
+        }
+    });
     
-    // add ticket purchases via form, but should be changed because this table is treated differently
+    // add ticket purchase
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
         console.log(req.body)
@@ -203,32 +202,32 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                res.redirect('/ticketpurchases');
+                res.redirect('/ticket_purchases');
             }
         });
     });
 
-    /* The URI that update data is sent to in order to update a person */
+    /* The URI that update data is sent to in order to update a ticket purchase */
 
-    // router.put('/:id', function(req, res){
-    //     var mysql = req.app.get('mysql');
-    //     console.log(req.body)
-    //     console.log(req.params.id)
-    //     var sql = "UPDATE bsg_people SET fname=?, lname=?, homeworld=?, age=? WHERE character_id=?";
-    //     var inserts = [req.body.fname, req.body.lname, req.body.homeworld, req.body.age, req.params.id];
-    //     sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-    //         if(error){
-    //             console.log(error)
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }else{
-    //             res.status(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+    router.put('/:id', function(req, res){
+        var mysql = req.app.get('mysql');
+        console.log(req.body)
+        console.log(req.params.id)
+        var sql = "UPDATE Ticket_Purchases SET customerID=?, showingID=?, ticketPrice=? WHERE ticketID=?";
+        var inserts = [req.body.customerID, req.body.showingID, req.body.ticketPrice, req.params.id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error)
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+    });
 
-    /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
+    /* Route to delete a ticket purchase, simply returns a 202 upon success. Ajax will handle this. */
 
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');

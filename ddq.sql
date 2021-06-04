@@ -23,18 +23,20 @@ DROP TABLE IF EXISTS `Movies`;
 CREATE TABLE `Movies` (
   `movieID` INT(11) NOT NULL AUTO_INCREMENT,
   `movieTitle` VARCHAR(255),
-  `movieGenre` VARCHAR(255),
+  `genreID` INT(11),
   `movieDuration` INT(11),
   `movieRestriction` VARCHAR(255),
   `movieDescription` VARCHAR(255),
-  PRIMARY KEY (`movieID`)
+  PRIMARY KEY (`movieID`),
+  FOREIGN KEY (`genreID`) REFERENCES `Genres` (`genreID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `Movies` (movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription)
+INSERT INTO `Movies` (movieTitle, genreID, movieDuration, movieRestriction, movieDescription)
 VALUES
-('Tenet', 'Action', 150, 'Rated R', 'A secret agent embarks on a dangerous, time-bending mission to prevent the start of World War III.'),
-('Stowaway', 'Sci Fi', 90, 'Rated R', 'A three-person crew on a mission to Mars faces an impossible choice when an unplanned passenger jeopardizes the lives of everyone on board.'),
-('Nobody', 'Action', 90, 'Rated R', 'Emmy winner Bob Odenkirk (Better Call Saul, The Post, Nebraska) stars as Hutch Mansell, an underestimated and overlooked dad and husband, taking lifes indignities on the chin and never pushing back. A nobody. When two thieves break into his suburban home one night, Hutch declines to defend himself or his family, hoping to prevent serious violence. His teenage son, Blake (Gage Munroe, The Shack), is disappointed in him and his wife, Becca (Connie Nielsen, Wonder Woman), seems to pull only further away. The aftermath of the incident strikes a match to Hutchs long-simmering rage, triggering dormant instincts and propelling him on a brutal path that will surface dark secrets and lethal skills. In a barrage of fists, gunfire and squealing tires, Hutch must save his family from a dangerous adversary (famed Russian actor Aleksey Serebryakov, Amazons McMafia) and ensure that he will never be underestimated as a nobody again.');
+('Tenet', 23, 150, 'Rated R', 'A secret agent embarks on a dangerous, time-bending mission to prevent the start of World War III.'),
+('Stowaway', 25, 90, 'Rated R', 'A three-person crew on a mission to Mars faces an impossible choice when an unplanned passenger jeopardizes the lives of everyone on board.'),
+('Nobody', 23, 90, 'Rated R', 'Emmy winner Bob Odenkirk (Better Call Saul, The Post, Nebraska) stars as Hutch Mansell, an underestimated and overlooked dad and husband, taking lifes indignities on the chin and never pushing back. A nobody. When two thieves break into his suburban home one night, Hutch declines to defend himself or his family, hoping to prevent serious violence. His teenage son, Blake (Gage Munroe, The Shack), is disappointed in him and his wife, Becca (Connie Nielsen, Wonder Woman), seems to pull only further away. The aftermath of the incident strikes a match to Hutchs long-simmering rage, triggering dormant instincts and propelling him on a brutal path that will surface dark secrets and lethal skills. In a barrage of fists, gunfire and squealing tires, Hutch must save his family from a dangerous adversary (famed Russian actor Aleksey Serebryakov, Amazons McMafia) and ensure that he will never be underestimated as a nobody again.');
+
 
 
 DROP TABLE IF EXISTS `Showings`;
@@ -55,9 +57,9 @@ CREATE TABLE `Showings` (
 
 INSERT INTO `Showings` (movieID, roomID, startTime, endTime, startDate, endDate, capacity)
 VALUES
-(16,1, '01:00:00', '03:30:00', '2021-05-01', '2021-05-30', 50),
-(17,2, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50),
-(18,3, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50);
+(1,1, '01:00:00', '03:30:00', '2021-05-01', '2021-05-30', 50),
+(2,2, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50),
+(3,3, '01:00:00', '02:30:00', '2021-05-01', '2021-05-30', 50);
 
 DROP TABLE IF EXISTS `Ticket_Purchases`;
 
@@ -67,15 +69,38 @@ CREATE TABLE `Ticket_Purchases` (
   `showingID` INT(11) NOT NULL,  
   `ticketPrice` DECIMAL(10,2),
   PRIMARY KEY (`ticketID`),
-  FOREIGN KEY (`showingID`) REFERENCES `Showings` (`showingID`),
+  FOREIGN KEY (`showingID`) REFERENCES `Showings` (`showingID`), 
   FOREIGN KEY (`customerID`) REFERENCES `Customers` (`customerID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 
 INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
-VALUES (23, 172, 20.00);
+VALUES (5, 162, 20.00);
 INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
-VALUES (24, 173, 20.00);
+VALUES (6, 163, 20.00);
 INSERT INTO `Ticket_Purchases` (customerID, showingID, ticketPrice)
-VALUES (25, 174, 20.00);
+VALUES (7, 164, 20.00);
+
+DROP TABLE IF EXISTS `Genres`;
+
+CREATE TABLE `Genres` (
+  `genreID` INT(11) not null AUTO_INCREMENT,
+  `genreName` VARCHAR(255) not null,
+  PRIMARY KEY (`genreID`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+
+INSERT INTO `Genres` (genreName)
+VALUES ('Action');
+INSERT INTO `Genres` (genreName)
+VALUES ('Horror');
+INSERT INTO `Genres` (genreName)
+VALUES ('Drama');
+INSERT INTO `Genres` (genreName)
+VALUES ('Romance');
+INSERT INTO `Genres` (genreName)
+VALUES ('Comedy');
+INSERT INTO `Genres` (genreName)
+VALUES ('Science Fiction');
+
+
 

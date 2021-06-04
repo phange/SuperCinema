@@ -22,6 +22,7 @@ UPDATE Movies SET
 
 DELETE FROM Movies WHERE movieID = :movieID;
 
+SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID
 
 -- Customers Page
 
