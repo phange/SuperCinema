@@ -5,16 +5,33 @@
 -- : = variable
 
 
+-- Genres PAge
+SELECT genreID, genreName from Genres;
+
+INSERT INTO Genres (genreName) VALUES (:genreName);
+
+UPDATE Genres SET
+    genreName = :genreName
+;
+
 -- Movies Page
 
-SELECT * FROM Movies;
+-- displays Movies as is
+SELECT Movies.movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies;
+-- displays Movies table with genreID replaced with corresponding genreName from Genres
+SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID;
+-- displays Movies table with genreID replaced with corresponding genreName from Genres
+-- AND matching Genre from filter dropdown
+SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID WHERE Movies.genreID = ?;
 
-INSERT INTO Movies (movieTitle, movieGenre, movieDuration, movieRestriction, movieDescription)
-VALUES (:movieTitle, :movieGenre, :movieDuration, :movieRestriction, :movieDescription);
+-- basic insert
+INSERT INTO Movies (movieTitle, genreID, movieDuration, movieRestriction, movieDescription)
+VALUES (:movieTitle, :genreID, :movieDuration, :movieRestriction, :movieDescription);
 
+-- basic update
 UPDATE Movies SET 
     movieTitle = :movieTitle,
-    movieGenre = :movieGenre,
+    genreID = :genreID,
     movieRestriction = :movieRestriction,
     movieDescription = :movieDescription
     WHERE movieID = :movieID
@@ -22,7 +39,6 @@ UPDATE Movies SET
 
 DELETE FROM Movies WHERE movieID = :movieID;
 
-SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID
 
 -- Customers Page
 

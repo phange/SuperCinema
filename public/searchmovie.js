@@ -5,3 +5,7 @@ function searchMovieByTitle() {
     //construct the URL and redirect to it
     window.location = '/movies/search/' + encodeURI(movie_title_search_string)
 }
+
+function searchtest() {
+    console.log("searchtest button works!")
+}

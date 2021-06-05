@@ -171,6 +171,7 @@ module.exports = function(){
         console.log(JSON.stringify(req.params.id))
         // req.params.id is pulling from URL here in people.js, but is not in movies.js
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            // console.log(JSON.stringify(sql))
             if(error){
                 console.log(error)
                 res.write(JSON.stringify(error));
