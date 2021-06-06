@@ -1,0 +1,25 @@
+<html>
+    <h1>Update showingID={{showing.id}}:</h1>
+    <form id="update-showing" action="/showings" method="post">
+        movieID:  <input type="text" name="movieID" value="{{showing.movieID}}"><br> 
+        roomID:
+        <select name="roomID" id="type">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select><br>
+        startTime:       <input type="text" name="startTime" value="{{showing.startTime}}"><br>
+        endTime:         <input type="text" name="endTime" value="{{showing.endTime}}"><br>
+        startDate:       <input type="text" name="startDate" value="{{showing.startDate}}"><br>
+        endDate:         <input type="text" name="endDate" value="{{showing.endDate}}"><br> 
+        capacity:        
+            <select name="capacity" id="type">
+            <option value="50">50</option>
+            </select><br>
+        
+    </form>
+    <button onclick="updateShowing({{showing.id}})">Update</button>
+</html>

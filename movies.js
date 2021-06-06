@@ -84,7 +84,7 @@ module.exports = function(){
         }
     });
 
-    /*Display all people from a given homeworld. Requires web based javascript to delete users with AJAX*/
+    /*Display all movies from a specific genre. Requires web based javascript to delete users with AJAX*/
     router.get('/filter/:genreID', function(req, res){
         var callbackCount = 0;
         var context = {};
@@ -124,6 +124,10 @@ module.exports = function(){
     router.post('/', function(req, res){
         console.log(req.body)
         var mysql = req.app.get('mysql');
+        if(req.body.genreID == '')
+        {
+            req.body.genreID = null;
+        }
         var sql = "INSERT INTO Movies (movieTitle, genreID, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
         var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
@@ -140,6 +144,10 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a movie */
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
+        if(req.body.genreID == '')
+        {
+            req.body.genreID = null;
+        }
         var sql = "UPDATE Movies SET movieTitle=?, genreID=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
         var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){

@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `Movies`;
 CREATE TABLE `Movies` (
   `movieID` INT(11) NOT NULL AUTO_INCREMENT,
   `movieTitle` VARCHAR(255),
-  `genreID` INT(11),
+  `genreID` INT(11) DEFAULT NULL,
   `movieDuration` INT(11),
   `movieRestriction` VARCHAR(255),
   `movieDescription` VARCHAR(255),
