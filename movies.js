@@ -13,29 +13,30 @@ module.exports = function(){
         });
     }    
 
-    // displays Movies as is
-    // function getMovies(res, mysql, context, complete){
-    //     mysql.pool.query("SELECT Movies.movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
-    //         if(error){
-    //             res.write(JSON.stringify(error));
-    //             res.end();
-    //         }
-    //         context.movies = results;
-    //         complete();
-    //     });
-    // }
-
-    // displays Movies with genreID as genreName from Genres instead
+    //displays Movies as is
     function getMovies(res, mysql, context, complete){
-        mysql.pool.query("SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID", function(error, results, fields){
-            if(error){
+         mysql.pool.query("SELECT Movies.movieID as id, movieTitle, genreID, movieDuration, movieRestriction, movieDescription FROM Movies", function(error, results, fields){
+             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
-            }
-            context.movies = results;
-            complete();
+             }
+             context.movies = results;
+             complete();
         });
-    }
+     } 
+
+    
+    // displays Movies with genreID as genreName from Genres instead
+    //function getMovies(res, mysql, context, complete){
+    //    mysql.pool.query("SELECT Movies.movieID as id, movieTitle, Genres.genreName AS genreID, movieDuration, movieRestriction, movieDescription FROM Movies INNER JOIN Genres ON Movies.genreID = Genres.genreID", function(error, results, fields){
+    //        if(error){
+    //            res.write(JSON.stringify(error));
+    //            res.end();
+    //        }
+    //        context.movies = results;
+    //        complete();
+    //    });
+    //}
 
     // displays Movies database with genreID replaced by genreName from Genres.
     function getMoviesByGenre(req, res, mysql, context, complete){
@@ -124,12 +125,14 @@ module.exports = function(){
     router.post('/', function(req, res){
         console.log(req.body)
         var mysql = req.app.get('mysql');
-        if(req.body.genreID == '')
+        if(req.body.genreID == "")
         {
             req.body.genreID = null;
         }
         var sql = "INSERT INTO Movies (movieTitle, genreID, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
         var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
+        console.log(inserts);
+        console.log(JSON.stringify(inserts));
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error))
@@ -144,12 +147,14 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a movie */
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        if(req.body.genreID == '')
+        if(req.body.genreID == "")
         {
             req.body.genreID = null;
         }
         var sql = "UPDATE Movies SET movieTitle=?, genreID=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
         var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
+        console.log(inserts);
+        console.log(JSON.stringify(inserts));
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error)

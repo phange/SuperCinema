@@ -9,7 +9,7 @@
 
         <option value="">None</option>
         {{#each genres}}
-        <option value="{{genreID}}">{{genreName}}</option>
+            <option value="{{genreID}}">{{genreName}}</option>
         {{/each}}
     </select><br>
     Movie Duration (mins): <input type="text" name="movieDuration"><br> 
@@ -28,7 +28,7 @@
     <label> Filter by genre </label>
     <select id='genre_filter' name="genres"> 
         {{#each genres}}
-        <option value="{{genreID}}">{{genreName}}</option>
+            <option value="{{genreID}}">{{genreName}}</option>
         {{/each}}
     </select><br>
     <input type="button" value="Filter" onclick="filterMovieByGenre()">
@@ -47,7 +47,7 @@
     <thead> 
         <th>movieID</th> 
         <th>movieTitle</th> 
-        <th>genreName</th>
+        <th>genreID</th>
         <th>movieDuration</th>
         <th>movieRestriction</th>  
         <th>movieDescription</th>
