@@ -1,0 +1,13 @@
+<html>
+    <h1>Update customerID={{customer.id}}:</h1>
+    <form id="update-customer" action="/customers" method="post"> 
+        Customer Name:      <input type="text" name="customerName" value="{{customer.customerName}}"><br>
+        Customer Type:
+                            <select name="customerType" id="type">
+                                <option value="Child">Child</option>
+                                <option value="Adult">Adult</option>
+                            </select><br>
+        Customer Email:     <input type="text" name="customerEmail" value="{{customer.customerEmail}}"><br>        
+    </form>
+    <button onclick="updateCustomer({{customer.id}})">Update</button>
+</html>

@@ -1,0 +1,32 @@
+<html>    
+    <h1>Update movieID={{movie.id}}:</h1>
+    <form id="update-movie" action="/movies" method="post">  
+        Movie Title:    <input type="text" name="movieTitle" value="{{movie.movieTitle}}"><br>
+        Movie Genre:    
+        <select name="genreID" id="genre-selector">
+            <option value=0>NULL</option>
+            {{!-- 
+            <option value="Action">Action</option>
+            <option value="Horror">Horror</option>
+            <option value="Drama">Drama</option>
+            <option value="Romance">Romance</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Science Fiction">Science Fiction</option>
+            --}}
+            
+            {{#each genres}}
+                <option value={{genreID}}>{{genreName}}</option>
+            {{/each}}
+            
+        </select><br>
+        Movie Duration (mins): <input type="text" name="movieDuration" value="{{movie.movieDuration}}"><br> 
+        Movie Restriction:
+        <select name ="movieRestriction" id = "type">
+            <option value="Rated G">Rated G</option>
+            <option value="Rated R">Rated R</option>
+        </select><br>
+        Movie Description: <input type="text" name="movieDescription" value="{{movie.movieDescription}}"><br>         
+        <script defer>selectGenre(28);</script>
+    </form>
+    <button onclick="updateMovie({{movie.id}})">Update</button>   
+</html>

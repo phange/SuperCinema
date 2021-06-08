@@ -1,0 +1,62 @@
+{{#each foo}}
+{{this}}
+{{/each}}
+<h3>Add New Showing:</h3>
+<form id="addShowing" action="/showings" method="post"> 
+    movieID: 
+    <select name='movieID'> 
+        {{#each movies}}
+        <option value="{{movieID}}">{{movieID}}</option>
+        {{/each}}
+    </select><br>      
+    roomID:
+    <select name="roomID" id="type">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select><br>
+    startTime:       <input type="text" name="startTime"><br>
+    endTime:         <input type="text" name="endTime"><br>
+    startDate:       <input type="text" name="startDate"><br>
+    endDate:         <input type="text" name="endDate"><br> 
+    capacity:        
+        <select name="capacity" id="type">
+        <option value="50">50</option>
+        </select><br>
+    <input type="submit" value="Submit">
+ </form>
+<br/>
+
+<br>
+<h3>Showings Database:</h3>
+<table class="table table-striped">
+    <thead> 
+        <th>showingID</th> 
+        <th>movieID</th> 
+        <th>roomID</th>
+        <th>startTime</th>
+        <th>endTime</th>
+        <th>startDate</th>
+        <th>endDate</th>
+        <th>capacity</th>
+    </thead> 
+    <tbody>
+        {{#each showings}} 
+        <tr> 
+            <td>{{id}}</td> 
+            <td>{{movieID}}</td> 
+            <td>{{roomID}}</td> 
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td> 
+            <td>{{startDate}}</td>
+            <td>{{endDate}}</td>
+            <td>{{capacity}}</td>
+            <td><button onclick="deleteShowing({{id}})">Delete</button></td>
+            <td><a href="/showings/{{id}}">Update</a></td>  
+        </tr> 
+        {{/each}} 
+    </tbody> 
+</table> 
