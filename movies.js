@@ -128,7 +128,7 @@ module.exports = function(){
         if(req.body.genreID == 0)
         {
             req.body.genreID = null;
-        }
+        };
         var sql = "INSERT INTO Movies (movieTitle, genreID, movieDuration, movieRestriction, movieDescription) VALUES (?,?,?,?,?)";
         var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription];
         console.log(inserts);
@@ -147,12 +147,12 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a movie */
     router.put('/:id', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "UPDATE Movies SET movieTitle=?, genreID=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
-        var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
         if(req.body.genreID == 0)
         {
             req.body.genreID = null;
         };
+        var sql = "UPDATE Movies SET movieTitle=?, genreID=?, movieDuration=?, movieRestriction=?, movieDescription=? WHERE movieID=?";        
+        var inserts = [req.body.movieTitle, req.body.genreID, req.body.movieDuration, req.body.movieRestriction, req.body.movieDescription, req.params.id];
         console.log(inserts);
         console.log(JSON.stringify(inserts));
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
