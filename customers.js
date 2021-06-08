@@ -32,7 +32,7 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js", "deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js, not tested
+        context.jsscripts = ["deletemovie.js", "deletecustomer.js"];  // added deleteMovie.js, not tested
         var mysql = req.app.get('mysql');
         getCustomers(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
@@ -49,7 +49,7 @@ module.exports = function(){
     router.get('/:id', function(req, res){
         callbackCount = 0;
         var context = {};
-        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatecustomer.js"];
+        context.jsscripts = ["updatecustomer.js"];
         var mysql = req.app.get('mysql');
         getCustomer(res, mysql, context, req.params.id, complete);
         function complete(){
