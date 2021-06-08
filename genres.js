@@ -18,7 +18,7 @@ module.exports = function(){
     router.get('/', function(req, res){
         var callbackCount = 0;
         var context = {};
-        // context.jsscripts = ["deleteperson.js","filterpeople.js","searchpeople.js"];
+        context.jsscripts = ["deletegenre.js"];
         var mysql = req.app.get('mysql');
         getGenres(res, mysql, context, complete);
         function complete(){  // this func make sure all callbacks finish before we go populate the page
@@ -30,7 +30,7 @@ module.exports = function(){
         }
     });
 
-    /* Adds a genre, redirects to the people page after adding */
+    /* Adds a genre, redirects to the Genres page after adding */
 
     router.post('/', function(req, res){
         // console.log(req.body.homeworld)
@@ -49,7 +49,7 @@ module.exports = function(){
         });
     });
 
-    /* Route to delete a person, simply returns a 202 upon success. Ajax will handle this. */
+    /* Route to delete a genre, simply returns a 202 upon success. Ajax will handle this. */
 
     router.delete('/:id', function(req, res){
         var mysql = req.app.get('mysql');

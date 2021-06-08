@@ -107,7 +107,7 @@ module.exports = function(){
     router.get('/:id', function(req, res){
         callbackCount = 0;
         var context = {};
-        context.jsscripts = ["selectedplanet.js", "updateperson.js", "updatemovie.js", "selectedgenre.js"];
+        context.jsscripts = ["updatemovie.js", "selectedgenre.js"];
         var mysql = req.app.get('mysql');
         getMovie(res, mysql, context, req.params.id, complete); 
         getMovies(res, mysql, context, complete);

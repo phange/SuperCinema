@@ -3,16 +3,21 @@
     <form id="update-movie" action="/movies" method="post">  
         Movie Title:    <input type="text" name="movieTitle" value="{{movie.movieTitle}}"><br>
         Movie Genre:    
-        <select name="movieGenre" id="genre-selector">
+        <select name="genreID" id="genre-selector">
+            <option value=0>NULL</option>
+            {{!-- 
             <option value="Action">Action</option>
             <option value="Horror">Horror</option>
             <option value="Drama">Drama</option>
             <option value="Romance">Romance</option>
             <option value="Comedy">Comedy</option>
             <option value="Science Fiction">Science Fiction</option>
-            {{!-- {{#each genres}}
-                <option value="{{genreID}}">{{genre}}</option>
-            {{/each}}             --}}
+            --}}
+            
+            {{#each genres}}
+                <option value={{genreID}}>{{genreName}}</option>
+            {{/each}}
+            
         </select><br>
         Movie Duration (mins): <input type="text" name="movieDuration" value="{{movie.movieDuration}}"><br> 
         Movie Restriction:
